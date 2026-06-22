@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Semut Trace</title>
+</head>
+<body>
+    <h1>New Request</h1>
+
+    <form action="/submit" method="post">
+        <label>Type</label><br>
+        <select name="request_type">
+            <option>Quote</option>
+            <option>Email</option>
+            <option>Review Reply</option>
+            <option>Social Post</option>
+            <option>Other</option>
+        </select>
+
+        <br><br>
+
+        <label>Request</label><br>
+        <textarea name="request_text" rows="8" cols="60"></textarea>
+
+        <br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <br>
+
+    <a href="/requests_page">View Requests</a>
+</body>
+</html>

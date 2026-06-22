@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Semut Requests</title>
+</head>
+<body>
+
+<h1>Requests</h1>
+
+<table border="1">
+<tr>
+    <th>ID</th>
+    <th>Type</th>
+    <th>Text</th>
+    <th>Status</th>
+    <th>Created</th>
+    <th>Result</th>
+</tr>
+
+{% for r in requests %}
+<tr>
+    <td>{{ r.id }}</td>
+    <td>{{ r.request_type }}</td>
+    <td>{{ r.request_text }}</td>
+    <td>{{ r.status }}</td>
+    <td>{{ r.created_at }}</td>
+    <td>
+    {% if not r.result %}
+    <form action="/request/{{ r.id }}/result" method="post">
+    	<textarea name="result" rows="4" cols="30"></textarea>
+    	<br>
+    	<button type="submit">
+        	Save Result
+    	</button>
+     </form>
+     {% else %}
+     {{ r.result }}
+     {% endif %}
+     </td>
+</tr>
+{% endfor %}
+	
+</table>
+
+<br>
+
+<a href="/new">New Request</a>
+
+</body>
+</html>
