@@ -110,6 +110,7 @@ Patterns emerge from accumulated traces and outcomes.
 * AI draft generation
 * Status tracking
 * History view
+* Owner notes on requests
 
 ### V0.2
 
