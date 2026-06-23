@@ -170,6 +170,26 @@ Current focus:
 
 ---
 
+## Setup
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Configure OpenAI before starting the application:
+
+```bash
+export OPENAI_API_KEY="your-api-key"
+# Optional; defaults to gpt-4.1-mini
+export OPENAI_MODEL="gpt-4.1-mini"
+```
+
+AI-generated drafts are saved for human review. They are never sent automatically.
+
+---
+
 ## License
 
 TBD
