@@ -5,10 +5,14 @@ from fastapi.templating import Jinja2Templates
 
 from pydantic import BaseModel
 from datetime import datetime
+from pathlib import Path
+from dotenv import load_dotenv
 from openai import OpenAI, OpenAIError
 import os
 import sqlite3
 import json
+
+load_dotenv(dotenv_path=Path(__file__).resolve().parent / ".env")
 
 templates = Jinja2Templates(directory="templates")
 
