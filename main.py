@@ -227,7 +227,7 @@ def generate_ai_draft(request_id: int):
     conn.row_factory = sqlite3.Row
 
     request_row = conn.execute("""
-        SELECT request_text, owner_notes
+        SELECT request_type, request_text, owner_notes
         FROM requests
         WHERE id = ?
     """, (request_id,)).fetchone()
@@ -244,6 +244,7 @@ def generate_ai_draft(request_id: int):
             detail="OPENAI_API_KEY is not configured"
         )
 
+    request_type = (request_row["request_type"] or "").strip() or "Other"
     owner_notes = request_row["owner_notes"] or "No owner notes provided."
 
     try:
@@ -257,6 +258,7 @@ def generate_ai_draft(request_id: int):
                 "The business owner must review and approve the draft."
             ),
             input=(
+                f"Request type:\n{request_type}\n\n"
                 f"Request:\n{request_row['request_text']}\n\n"
                 f"Owner notes:\n{owner_notes}"
             )
