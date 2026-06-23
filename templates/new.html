@@ -47,13 +47,13 @@
     <h1>New Request</h1>
 
     <form action="/submit" method="post">
-        <label>Type</label><br>
-        <select name="request_type">
-            <option>Quote</option>
-            <option>Email</option>
-            <option>Review Reply</option>
-            <option>Social Post</option>
-            <option>Other</option>
+        <label for="request_type">Request Type</label><br>
+        <select id="request_type" name="request_type" required>
+            <option value="Quote">Quote</option>
+            <option value="Email">Email</option>
+            <option value="Review Reply">Review Reply</option>
+            <option value="Social Post">Social Post</option>
+            <option value="Other">Other</option>
         </select>
 
         <br><br>
