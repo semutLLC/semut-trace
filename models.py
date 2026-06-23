@@ -13,4 +13,5 @@ class Request(Base):
     request_type = Column(String)
     request_text = Column(String)
     status = Column(String, default="submitted")
+    owner_notes = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
