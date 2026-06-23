@@ -29,9 +29,18 @@ def init_db():
             request_text TEXT NOT NULL,
             status TEXT NOT NULL,
             result TEXT,
+            owner_notes TEXT,
             created_at TEXT NOT NULL
         )
     """)
+
+    columns = {
+        row[1]
+        for row in cur.execute("PRAGMA table_info(requests)").fetchall()
+    }
+    if "owner_notes" not in columns:
+        cur.execute("ALTER TABLE requests ADD COLUMN owner_notes TEXT")
+
     conn.commit()
     conn.close()
 
@@ -82,7 +91,7 @@ def get_requests():
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT id, request_type, request_text, status, result, created_at
+        SELECT id, request_type, request_text, status, result, owner_notes, created_at
         FROM requests
         ORDER BY id DESC
     """)
@@ -166,6 +175,32 @@ def save_result(
     """, (
         result,
         "completed",
+        request_id
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return RedirectResponse(
+        url="/requests_page",
+        status_code=303
+    )
+
+
+@app.post("/request/{request_id}/notes")
+def save_owner_notes(
+    request_id: int,
+    owner_notes: str = Form("")
+):
+    conn = sqlite3.connect(DB_FILE)
+    cur = conn.cursor()
+
+    cur.execute("""
+        UPDATE requests
+        SET owner_notes = ?
+        WHERE id = ?
+    """, (
+        owner_notes,
         request_id
     ))
 
