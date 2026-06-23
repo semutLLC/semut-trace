@@ -8,12 +8,14 @@ from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
 from openai import OpenAI, OpenAIError
+import logging
 import os
 import sqlite3
 import json
 
 load_dotenv(dotenv_path=Path(__file__).resolve().parent / ".env")
 
+logger = logging.getLogger(__name__)
 templates = Jinja2Templates(directory="templates")
 
 app = FastAPI()
@@ -260,9 +262,34 @@ def generate_ai_draft(request_id: int):
             )
         )
     except OpenAIError as exc:
+        logger.exception(
+            "OpenAI draft generation failed for request %s",
+            request_id
+        )
+
+        api_status = getattr(exc, "status_code", None)
+        if api_status == 401:
+            detail = "OpenAI authentication failed; check OPENAI_API_KEY"
+            response_status = 401
+        elif api_status == 429:
+            detail = "OpenAI quota or rate limit exceeded; check API billing and limits"
+            response_status = 429
+        elif api_status == 404:
+            detail = "Configured OpenAI model was not found or is unavailable"
+            response_status = 502
+        elif api_status == 400:
+            detail = "OpenAI rejected the draft generation request"
+            response_status = 502
+        elif api_status is None:
+            detail = "Could not connect to OpenAI; check server network access"
+            response_status = 502
+        else:
+            detail = f"OpenAI API request failed with status {api_status}"
+            response_status = 502
+
         raise HTTPException(
-            status_code=502,
-            detail="OpenAI draft generation failed"
+            status_code=response_status,
+            detail=detail
         ) from exc
 
     draft = response.output_text.strip()
