@@ -63,6 +63,13 @@ def root():
 
 @app.post("/request")
 def create_request(req: RequestIn):
+    request_text = req.text.strip()
+    if not request_text:
+        raise HTTPException(
+            status_code=422,
+            detail="Please enter a request."
+        )
+
     conn = sqlite3.connect(DB_FILE)
     cur = conn.cursor()
 
@@ -73,7 +80,7 @@ def create_request(req: RequestIn):
         VALUES (?, ?, ?, ?, ?)
     """, (
         req.type,
-        req.text,
+        request_text,
         "submitted",
         None,
         created_at
@@ -86,7 +93,7 @@ def create_request(req: RequestIn):
     return {
         "id": request_id,
         "type": req.type,
-        "text": req.text,
+        "text": request_text,
         "status": "submitted",
         "created_at": created_at
     }
@@ -120,9 +127,24 @@ def new_request_page(request: Request):
 
 @app.post("/submit")
 def submit_request(
+    request: Request,
     request_type: str = Form(...),
-    request_text: str = Form(...)
+    request_text: str = Form("")
 ):
+    request_text = request_text.strip()
+    if not request_text:
+        return templates.TemplateResponse(
+            request=request,
+            name="new.html",
+            context={
+                "request": request,
+                "request_type": request_type,
+                "request_text": request_text,
+                "error": "Please enter a request."
+            },
+            status_code=422
+        )
+
     conn = sqlite3.connect(DB_FILE)
     cur = conn.cursor()
 
@@ -237,6 +259,13 @@ def generate_ai_draft(request_id: int):
     if request_row is None:
         raise HTTPException(status_code=404, detail="Request not found")
 
+    request_text = (request_row["request_text"] or "").strip()
+    if not request_text:
+        raise HTTPException(
+            status_code=422,
+            detail="Please enter a request before generating a draft"
+        )
+
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise HTTPException(
@@ -259,7 +288,7 @@ def generate_ai_draft(request_id: int):
             ),
             input=(
                 f"Request type:\n{request_type}\n\n"
-                f"Request:\n{request_row['request_text']}\n\n"
+                f"Request:\n{request_text}\n\n"
                 f"Owner notes:\n{owner_notes}"
             )
         )

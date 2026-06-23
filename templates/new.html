@@ -1,67 +1,83 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    	<title>Semut Trace</title>
-    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<style>
-	body {
-    		font-family: Arial, sans-serif;
-    		margin: 20px;
-	}
+    <title>Semut Trace</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
 
-	.container {
-    		max-width: 800px;
-    		margin: auto;
-	}
+    .container {
+        max-width: 800px;
+        margin: auto;
+    }
 
-	textarea {
-    		width: 100%;
-    		box-sizing: border-box;
-	}
+    textarea {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+    }
 
-	input, select {
-	    	width: 100%;
-    		padding: 8px;
-	    	box-sizing: border-box;
-	}
+    input, select {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+    }
 
-	button {
-    		padding: 10px;
-	    	width: 100%;
-	    margin-top: 10px;
-	}
+    button {
+        padding: 10px;
+        width: 100%;
+        margin-top: 10px;
+    }
 
-	table {
-    		width: 100%;
-		border-collapse: collapse;
-	}
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
 
-	td, th {
-    		padding: 8px;
-		border: 1px solid #ccc;
-	}
-	</style>
+    td, th {
+        padding: 8px;
+        border: 1px solid #ccc;
+    }
+
+    .error {
+        color: #b42318;
+        margin: 8px 0 0;
+        min-height: 1.5em;
+    }
+    </style>
 </head>
 <body>
 <div class="container">
     <h1>New Request</h1>
 
-    <form action="/submit" method="post">
+    <form id="request_form" action="/submit" method="post" novalidate>
         <label for="request_type">Request Type</label><br>
         <select id="request_type" name="request_type" required>
-            <option value="Quote">Quote</option>
-            <option value="Email">Email</option>
-            <option value="Review Reply">Review Reply</option>
-            <option value="Social Post">Social Post</option>
-            <option value="Other">Other</option>
+            <option value="Quote" {% if request_type|default('Quote') == 'Quote' %}selected{% endif %}>Quote</option>
+            <option value="Email" {% if request_type|default('Quote') == 'Email' %}selected{% endif %}>Email</option>
+            <option value="Review Reply" {% if request_type|default('Quote') == 'Review Reply' %}selected{% endif %}>Review Reply</option>
+            <option value="Social Post" {% if request_type|default('Quote') == 'Social Post' %}selected{% endif %}>Social Post</option>
+            <option value="Other" {% if request_type|default('Quote') == 'Other' %}selected{% endif %}>Other</option>
         </select>
 
         <br><br>
 
-        <label>Request</label><br>
-        <textarea name="request_text" rows="8" cols="60"></textarea>
+        <label for="request_text">Request</label><br>
+        <textarea
+            id="request_text"
+            name="request_text"
+            rows="8"
+            cols="60"
+            required
+            aria-describedby="request_error"
+            aria-invalid="{{ 'true' if error|default('') else 'false' }}"
+        >{{ request_text|default('') }}</textarea>
+        <p id="request_error" class="error" role="alert">{{ error|default('') }}</p>
 
-        <br><br>
+        <br>
 
         <button type="submit">Submit</button>
     </form>
@@ -70,5 +86,26 @@
 
     <a href="/requests_page">View Requests</a>
 </div>
+<script>
+const form = document.querySelector("#request_form");
+const input = document.querySelector("#request_text");
+const error = document.querySelector("#request_error");
+
+form.addEventListener("submit", (event) => {
+    if (!input.value.trim()) {
+        event.preventDefault();
+        error.textContent = "Please enter a request.";
+        input.setAttribute("aria-invalid", "true");
+        input.focus();
+    }
+});
+
+input.addEventListener("input", () => {
+    if (input.value.trim()) {
+        error.textContent = "";
+        input.setAttribute("aria-invalid", "false");
+    }
+});
+</script>
 </body>
 </html>
