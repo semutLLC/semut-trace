@@ -178,12 +178,12 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-Configure OpenAI before starting the application:
+Configure OpenAI before starting the application. Either export the variables or create a `.env` file beside `main.py`:
 
-```bash
-export OPENAI_API_KEY="your-api-key"
+```dotenv
+OPENAI_API_KEY=your-api-key
 # Optional; defaults to gpt-4.1-mini
-export OPENAI_MODEL="gpt-4.1-mini"
+OPENAI_MODEL=gpt-4.1-mini
 ```
 
 AI-generated drafts are saved for human review. They are never sent automatically.
