@@ -67,6 +67,10 @@
     <td>{{ r.created_at }}</td>
     <td>
     {% if not r.result %}
+    <form action="/request/{{ r.id }}/generate" method="post">
+        <button type="submit">Generate AI Draft</button>
+    </form>
+    <small>AI drafts are not sent automatically and require human review.</small>
     <form action="/request/{{ r.id }}/result" method="post">
     	<textarea name="result" rows="4"></textarea>
     	<br>
