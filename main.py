@@ -1,10 +1,12 @@
 from fastapi import FastAPI
-from fastapi import Request, Form
+from fastapi import Request, Form, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from pydantic import BaseModel
 from datetime import datetime
+from openai import OpenAI, OpenAIError
+import os
 import sqlite3
 import json
 
@@ -204,6 +206,74 @@ def save_owner_notes(
         request_id
     ))
 
+    conn.commit()
+    conn.close()
+
+    return RedirectResponse(
+        url="/requests_page",
+        status_code=303
+    )
+
+
+@app.post("/request/{request_id}/generate")
+def generate_ai_draft(request_id: int):
+    conn = sqlite3.connect(DB_FILE)
+    conn.row_factory = sqlite3.Row
+
+    request_row = conn.execute("""
+        SELECT request_text, owner_notes
+        FROM requests
+        WHERE id = ?
+    """, (request_id,)).fetchone()
+
+    conn.close()
+
+    if request_row is None:
+        raise HTTPException(status_code=404, detail="Request not found")
+
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise HTTPException(
+            status_code=503,
+            detail="OPENAI_API_KEY is not configured"
+        )
+
+    owner_notes = request_row["owner_notes"] or "No owner notes provided."
+
+    try:
+        client = OpenAI(api_key=api_key)
+        response = client.responses.create(
+            model=os.getenv("OPENAI_MODEL", "gpt-4.1-mini"),
+            instructions=(
+                "Create a professional business draft for the request below. "
+                "Use the owner's notes as additional context. Return only the "
+                "draft text. Do not claim the message was sent or approved. "
+                "The business owner must review and approve the draft."
+            ),
+            input=(
+                f"Request:\n{request_row['request_text']}\n\n"
+                f"Owner notes:\n{owner_notes}"
+            )
+        )
+    except OpenAIError as exc:
+        raise HTTPException(
+            status_code=502,
+            detail="OpenAI draft generation failed"
+        ) from exc
+
+    draft = response.output_text.strip()
+    if not draft:
+        raise HTTPException(
+            status_code=502,
+            detail="OpenAI returned an empty draft"
+        )
+
+    conn = sqlite3.connect(DB_FILE)
+    conn.execute("""
+        UPDATE requests
+        SET result = ?
+        WHERE id = ?
+    """, (draft, request_id))
     conn.commit()
     conn.close()
 
