@@ -1,9 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Semut Trace</title>
+    	<title>Semut Trace</title>
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+	body {
+    		font-family: Arial, sans-serif;
+    		margin: 20px;
+	}
+
+	.container {
+    		max-width: 800px;
+    		margin: auto;
+	}
+
+	textarea {
+    		width: 100%;
+    		box-sizing: border-box;
+	}
+
+	input, select {
+	    	width: 100%;
+    		padding: 8px;
+	    	box-sizing: border-box;
+	}
+
+	button {
+    		padding: 10px;
+	    	width: 100%;
+	    margin-top: 10px;
+	}
+
+	table {
+    		width: 100%;
+		border-collapse: collapse;
+	}
+
+	td, th {
+    		padding: 8px;
+		border: 1px solid #ccc;
+	}
+	</style>
 </head>
 <body>
+<div class="container">
     <h1>New Request</h1>
 
     <form action="/submit" method="post">
@@ -29,5 +69,6 @@
     <br>
 
     <a href="/requests_page">View Requests</a>
+</div>
 </body>
 </html>

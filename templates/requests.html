@@ -1,12 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Semut Requests</title>
+	<title>Semut Requests</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+        body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+        }
+
+        .container {
+                max-width: 800px;
+                margin: auto;
+        }
+
+        textarea {
+                width: 100%;
+                box-sizing: border-box;
+        }
+
+        input, select {
+                width: 100%;
+                padding: 8px;
+                box-sizing: border-box;
+        }
+
+        button {
+                padding: 10px;
+                width: 100%;
+            margin-top: 10px;
+        }
+
+        table {
+                width: 100%;
+                border-collapse: collapse;
+        }
+
+        td, th {
+                padding: 8px;
+                border: 1px solid #ccc;
+        }
+        </style>
+
 </head>
 <body>
-
+<div class="container">
 <h1>Requests</h1>
-
+<div style="overflow-x:auto;">
 <table border="1">
 <tr>
     <th>ID</th>
@@ -27,7 +67,7 @@
     <td>
     {% if not r.result %}
     <form action="/request/{{ r.id }}/result" method="post">
-    	<textarea name="result" rows="4" cols="30"></textarea>
+    	<textarea name="result" rows="4"></textarea>
     	<br>
     	<button type="submit">
         	Save Result
@@ -41,10 +81,10 @@
 {% endfor %}
 	
 </table>
-
+</div>
 <br>
 
 <a href="/new">New Request</a>
-
+</div>
 </body>
 </html>
