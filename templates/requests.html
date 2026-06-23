@@ -55,6 +55,7 @@
     <th>Status</th>
     <th>Created</th>
     <th>Result</th>
+    <th>Owner Notes</th>
 </tr>
 
 {% for r in requests %}
@@ -77,6 +78,13 @@
      {{ r.result }}
      {% endif %}
      </td>
+    <td>
+        <form action="/request/{{ r.id }}/notes" method="post">
+            <textarea name="owner_notes" rows="4">{{ r.owner_notes or '' }}</textarea>
+            <br>
+            <button type="submit">Save Notes</button>
+        </form>
+    </td>
 </tr>
 {% endfor %}
 	
