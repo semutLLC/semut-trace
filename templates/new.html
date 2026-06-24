@@ -3,68 +3,299 @@
 <head>
     <title>Semut Trace</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+    :root {
+        --ink: #1a1a18;
+        --muted: #6b6b68;
+        --canvas: #f8f6f1;
+        --surface: #ffffff;
+        --border: #e0ddd6;
+        --sage: #7a9e87;
+        --sage-dark: #52765f;
+        --sage-pale: #eaf2ed;
+        --amber: #a96728;
+        --amber-dark: #8f551d;
+        --danger: #a33a32;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
     body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
+        min-height: 100vh;
+        margin: 0;
+        color: var(--ink);
+        background:
+            radial-gradient(circle at 12% 0%, rgba(122, 158, 135, 0.10), transparent 30rem),
+            var(--canvas);
+        font-family: Inter, Arial, sans-serif;
+        line-height: 1.6;
     }
 
     .container {
-        max-width: 800px;
-        margin: auto;
+        width: min(100% - 32px, 860px);
+        margin: 0 auto;
+        padding-bottom: 48px;
+    }
+
+    .topbar {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        padding: 24px 0 20px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+        color: var(--sage-dark);
+        font-family: "DM Serif Display", Georgia, serif;
+        font-size: 1.5rem;
+        text-decoration: none;
+    }
+
+    .product-name {
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+
+    .intro {
+        max-width: 660px;
+        padding: 56px 0 28px;
+    }
+
+    .eyebrow {
+        margin: 0 0 12px;
+        color: var(--sage-dark);
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+
+    h1, h2 {
+        font-family: "DM Serif Display", Georgia, serif;
+        line-height: 1.08;
+    }
+
+    h1 {
+        max-width: 640px;
+        margin: 0;
+        font-size: clamp(2.5rem, 7vw, 4rem);
+        font-weight: 400;
+        letter-spacing: -0.025em;
+    }
+
+    .intro-copy {
+        max-width: 600px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 1.06rem;
+    }
+
+    .draft-card,
+    .draft-result {
+        padding: clamp(22px, 5vw, 38px);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--surface);
+        box-shadow: 0 18px 50px rgba(26, 26, 24, 0.06);
+    }
+
+    label {
+        display: inline-block;
+        margin-bottom: 8px;
+        font-weight: 700;
+    }
+
+    textarea,
+    input,
+    select {
+        width: 100%;
+        padding: 14px 15px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--ink);
+        background: #fff;
+        font: inherit;
+        line-height: 1.5;
+        transition: border-color 160ms ease, box-shadow 160ms ease;
     }
 
     textarea {
-        width: 100%;
-        padding: 8px;
-        box-sizing: border-box;
+        min-height: 180px;
+        resize: vertical;
     }
 
-    input, select {
-        width: 100%;
-        padding: 8px;
-        box-sizing: border-box;
+    textarea:focus,
+    input:focus,
+    select:focus {
+        outline: none;
+        border-color: var(--sage);
+        box-shadow: 0 0 0 4px rgba(122, 158, 135, 0.16);
     }
 
     button {
-        padding: 10px;
         width: 100%;
-        margin-top: 10px;
+        margin-top: 14px;
+        padding: 12px 18px;
+        border: 1px solid var(--amber);
+        border-radius: 8px;
+        color: #fff;
+        background: var(--amber);
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+    }
+
+    button:hover {
+        border-color: var(--amber-dark);
+        background: var(--amber-dark);
+        transform: translateY(-1px);
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+        outline: 3px solid rgba(122, 158, 135, 0.4);
+        outline-offset: 3px;
+    }
+
+    .voice-button {
+        border-color: var(--border);
+        color: var(--ink);
+        background: var(--canvas);
+    }
+
+    .voice-button:hover {
+        border-color: var(--sage);
+        color: var(--sage-dark);
+        background: var(--sage-pale);
     }
 
     .voice-button[aria-pressed="true"] {
-        background: #b42318;
+        border-color: var(--danger);
         color: #fff;
+        background: var(--danger);
     }
 
-    .voice-status {
-        margin: 8px 0 0;
+    .voice-status,
+    .copy-status,
+    .error {
         min-height: 1.5em;
+        margin: 8px 0 0;
+        font-size: 0.9rem;
     }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    td, th {
-        padding: 8px;
-        border: 1px solid #ccc;
+    .voice-status,
+    .copy-status {
+        color: var(--muted);
     }
 
     .error {
-        color: #b42318;
-        margin: 8px 0 0;
-        min-height: 1.5em;
+        color: var(--danger);
+    }
+
+    .draft-result {
+        margin-top: 24px;
+        border-color: #cadbcf;
+        background: var(--sage-pale);
+        box-shadow: none;
+    }
+
+    .draft-result h2 {
+        margin: 0 0 18px;
+        font-size: 2rem;
+        font-weight: 400;
+    }
+
+    .draft-result textarea {
+        min-height: 220px;
+        border-color: #cadbcf;
+        background: rgba(255, 255, 255, 0.82);
+    }
+
+    #copy_draft {
+        border-color: var(--sage-dark);
+        background: var(--sage-dark);
+    }
+
+    #copy_draft:hover {
+        border-color: #496f57;
+        background: #496f57;
+    }
+
+    .review-note,
+    .privacy-note {
+        color: var(--muted);
+    }
+
+    .privacy-note {
+        margin: 24px 0 0;
+        text-align: center;
+        font-size: 0.88rem;
+    }
+
+    .page-footer {
+        display: flex;
+        justify-content: center;
+        padding: 26px 0 0;
+    }
+
+    .requests-link {
+        color: var(--sage-dark);
+        font-weight: 700;
+        text-underline-offset: 4px;
+    }
+
+    @media (max-width: 600px) {
+        .container {
+            width: min(100% - 24px, 860px);
+        }
+
+        .topbar {
+            padding-top: 18px;
+        }
+
+        .intro {
+            padding-top: 38px;
+        }
+
+        .draft-card,
+        .draft-result {
+            border-radius: 10px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            scroll-behavior: auto !important;
+            transition: none !important;
+        }
     }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Generate a Draft</h1>
-    <p>Describe what you need. Semut will prepare a draft for you to review.</p>
+    <header class="topbar">
+        <a class="brand" href="/">Semut</a>
+        <span class="product-name">Trace</span>
+    </header>
 
-    <form id="request_form" action="/submit" method="post" novalidate>
+    <main>
+    <section class="intro">
+        <p class="eyebrow">Professional draft assistant</p>
+        <h1>Turn your notes into a polished reply.</h1>
+        <p class="intro-copy">Describe what you need. Semut will prepare a professional starting point for you to review, edit, and share.</p>
+    </section>
+
+    <form id="request_form" class="draft-card" action="/submit" method="post" novalidate>
         <label for="request_text">What would you like help drafting?</label><br>
         <textarea
             id="request_text"
@@ -91,11 +322,27 @@
         <button type="submit">Generate Draft</button>
     </form>
 
-    <p><small>AI-generated drafts are never sent automatically and require your review.</small></p>
+    {% if generation_error|default('') %}
+    <p class="error" role="alert">{{ generation_error }}</p>
+    {% endif %}
 
-    <br>
+    {% if draft|default('') %}
+    <section id="draft_result" class="draft-result" tabindex="-1" aria-live="polite">
+        <h2>Your draft</h2>
+        <label for="generated_draft">Review before using</label>
+        <textarea id="generated_draft" rows="10" readonly>{{ draft }}</textarea>
+        <button id="copy_draft" type="button">Copy Draft</button>
+        <p id="copy_status" class="copy-status" role="status" aria-live="polite"></p>
+        <p class="review-note"><small>This draft has not been sent. Review and edit it before sharing.</small></p>
+    </section>
+    {% endif %}
 
-    <a href="/requests_page">View Requests</a>
+    <p class="privacy-note"><small>AI-generated drafts are never sent automatically and require your review.</small></p>
+    </main>
+
+    <footer class="page-footer">
+        <a class="requests-link" href="/requests_page">View Requests</a>
+    </footer>
 </div>
 <script>
 const form = document.querySelector("#request_form");
@@ -104,6 +351,40 @@ const error = document.querySelector("#request_error");
 const voiceButton = document.querySelector("#voice_button");
 const voiceStatus = document.querySelector("#voice_status");
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const draftResult = document.querySelector("#draft_result");
+const generatedDraft = document.querySelector("#generated_draft");
+const copyDraftButton = document.querySelector("#copy_draft");
+const copyStatus = document.querySelector("#copy_status");
+
+if (draftResult) {
+    draftResult.focus();
+}
+
+if (copyDraftButton && generatedDraft) {
+    copyDraftButton.addEventListener("click", async () => {
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(generatedDraft.value);
+            } else {
+                generatedDraft.select();
+                generatedDraft.setSelectionRange(0, generatedDraft.value.length);
+                const copied = document.execCommand("copy");
+                generatedDraft.setSelectionRange(0, 0);
+                if (!copied) {
+                    throw new Error("Copy command failed");
+                }
+            }
+
+            copyStatus.textContent = "Draft copied to clipboard.";
+            copyDraftButton.textContent = "Copied!";
+            window.setTimeout(() => {
+                copyDraftButton.textContent = "Copy Draft";
+            }, 2000);
+        } catch (copyError) {
+            copyStatus.textContent = "Could not copy automatically. Select the draft and copy it manually.";
+        }
+    });
+}
 
 if (SpeechRecognition) {
     const recognition = new SpeechRecognition();
