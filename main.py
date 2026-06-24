@@ -58,7 +58,7 @@ init_db()
 
 @app.get("/")
 def root():
-    return {"message": "Semut Trace Online"}
+    return RedirectResponse(url="/new", status_code=307)
 
 
 @app.post("/request")
