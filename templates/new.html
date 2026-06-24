@@ -51,21 +51,11 @@
 </head>
 <body>
 <div class="container">
-    <h1>New Request</h1>
+    <h1>Generate a Draft</h1>
+    <p>Describe what you need. Semut will prepare a draft for you to review.</p>
 
     <form id="request_form" action="/submit" method="post" novalidate>
-        <label for="request_type">Request Type</label><br>
-        <select id="request_type" name="request_type" required>
-            <option value="Quote" {% if request_type|default('Quote') == 'Quote' %}selected{% endif %}>Quote</option>
-            <option value="Email" {% if request_type|default('Quote') == 'Email' %}selected{% endif %}>Email</option>
-            <option value="Review Reply" {% if request_type|default('Quote') == 'Review Reply' %}selected{% endif %}>Review Reply</option>
-            <option value="Social Post" {% if request_type|default('Quote') == 'Social Post' %}selected{% endif %}>Social Post</option>
-            <option value="Other" {% if request_type|default('Quote') == 'Other' %}selected{% endif %}>Other</option>
-        </select>
-
-        <br><br>
-
-        <label for="request_text">Request</label><br>
+        <label for="request_text">What would you like help drafting?</label><br>
         <textarea
             id="request_text"
             name="request_text"
@@ -79,8 +69,10 @@
 
         <br>
 
-        <button type="submit">Submit</button>
+        <button type="submit">Generate Draft</button>
     </form>
+
+    <p><small>AI-generated drafts are never sent automatically and require your review.</small></p>
 
     <br>
 

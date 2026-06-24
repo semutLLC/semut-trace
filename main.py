@@ -128,7 +128,6 @@ def new_request_page(request: Request):
 @app.post("/submit")
 def submit_request(
     request: Request,
-    request_type: str = Form(...),
     request_text: str = Form("")
 ):
     request_text = request_text.strip()
@@ -138,7 +137,6 @@ def submit_request(
             name="new.html",
             context={
                 "request": request,
-                "request_type": request_type,
                 "request_text": request_text,
                 "error": "Please enter a request."
             },
@@ -153,18 +151,19 @@ def submit_request(
         (request_type, request_text, status, created_at)
         VALUES (?, ?, ?, ?)
     """, (
-        request_type,
+        "Other",
         request_text,
         "submitted",
         datetime.utcnow().isoformat()
     ))
 
+    request_id = cur.lastrowid
     conn.commit()
     conn.close()
 
     return RedirectResponse(
-        url="/requests_page",
-        status_code=303
+        url=f"/request/{request_id}/generate",
+        status_code=307
     )
 
 
