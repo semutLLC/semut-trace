@@ -32,6 +32,16 @@
         margin-top: 10px;
     }
 
+    .voice-button[aria-pressed="true"] {
+        background: #b42318;
+        color: #fff;
+    }
+
+    .voice-status {
+        margin: 8px 0 0;
+        min-height: 1.5em;
+    }
+
     table {
         width: 100%;
         border-collapse: collapse;
@@ -62,9 +72,18 @@
             rows="8"
             cols="60"
             required
-            aria-describedby="request_error"
+            aria-describedby="request_error voice_status"
             aria-invalid="{{ 'true' if error|default('') else 'false' }}"
         >{{ request_text|default('') }}</textarea>
+        <button
+            id="voice_button"
+            class="voice-button"
+            type="button"
+            aria-controls="request_text"
+            aria-pressed="false"
+            hidden
+        >Start voice input</button>
+        <p id="voice_status" class="voice-status" role="status" aria-live="polite"></p>
         <p id="request_error" class="error" role="alert">{{ error|default('') }}</p>
 
         <br>
@@ -82,6 +101,69 @@
 const form = document.querySelector("#request_form");
 const input = document.querySelector("#request_text");
 const error = document.querySelector("#request_error");
+const voiceButton = document.querySelector("#voice_button");
+const voiceStatus = document.querySelector("#voice_status");
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (SpeechRecognition) {
+    const recognition = new SpeechRecognition();
+    recognition.lang = navigator.language || "en-US";
+    recognition.interimResults = true;
+    recognition.continuous = false;
+
+    let listening = false;
+    let startingText = "";
+    let endMessage = "";
+
+    voiceButton.hidden = false;
+
+    voiceButton.addEventListener("click", () => {
+        if (listening) {
+            recognition.stop();
+            return;
+        }
+
+        startingText = input.value.trim();
+        endMessage = "";
+        recognition.start();
+    });
+
+    recognition.addEventListener("start", () => {
+        listening = true;
+        voiceButton.textContent = "Stop listening";
+        voiceButton.setAttribute("aria-pressed", "true");
+        voiceStatus.textContent = "Listening… Speak your request.";
+    });
+
+    recognition.addEventListener("result", (event) => {
+        let transcript = "";
+        for (let index = 0; index < event.results.length; index += 1) {
+            transcript += event.results[index][0].transcript;
+        }
+
+        const separator = startingText && transcript ? " " : "";
+        input.value = (startingText + separator + transcript).trim();
+        input.dispatchEvent(new Event("input"));
+    });
+
+    recognition.addEventListener("error", (event) => {
+        const messages = {
+            "not-allowed": "Microphone access was denied.",
+            "no-speech": "No speech was detected. Please try again.",
+            "network": "Voice recognition could not reach the speech service."
+        };
+        endMessage = messages[event.error] || "Voice input stopped unexpectedly.";
+    });
+
+    recognition.addEventListener("end", () => {
+        listening = false;
+        voiceButton.textContent = "Start voice input";
+        voiceButton.setAttribute("aria-pressed", "false");
+        voiceStatus.textContent = endMessage || "Voice input finished. Review the text before generating.";
+    });
+} else {
+    voiceStatus.textContent = "Voice input is not supported in this browser. You can still type your request.";
+}
 
 form.addEventListener("submit", (event) => {
     if (!input.value.trim()) {
