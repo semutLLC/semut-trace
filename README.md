@@ -43,6 +43,8 @@ This repository implements the Trace layer.
 
 ---
 
+For the full vision see: docs/VISION.md
+
 ## Initial Use Case
 
 The first implementation focuses on AI-assisted business administration.
