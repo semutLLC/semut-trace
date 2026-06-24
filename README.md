@@ -43,7 +43,7 @@ This repository implements the Trace layer.
 
 ---
 
-For the full vision see: docs/VISION.md
+[docs/VISION.md](docs/VISION.md)
 
 ## Initial Use Case
 
