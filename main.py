@@ -161,9 +161,29 @@ def submit_request(
     conn.commit()
     conn.close()
 
-    return RedirectResponse(
-        url=f"/request/{request_id}/generate",
-        status_code=307
+    try:
+        draft = _generate_ai_draft(request_id)
+    except HTTPException as exc:
+        return templates.TemplateResponse(
+            request=request,
+            name="new.html",
+            context={
+                "request": request,
+                "request_text": request_text,
+                "generation_error": exc.detail
+            },
+            status_code=exc.status_code
+        )
+
+    return templates.TemplateResponse(
+        request=request,
+        name="new.html",
+        context={
+            "request": request,
+            "request_text": request_text,
+            "draft": draft,
+            "request_id": request_id
+        }
     )
 
 
@@ -242,8 +262,7 @@ def save_owner_notes(
     )
 
 
-@app.post("/request/{request_id}/generate")
-def generate_ai_draft(request_id: int):
+def _generate_ai_draft(request_id: int):
     conn = sqlite3.connect(DB_FILE)
     conn.row_factory = sqlite3.Row
 
@@ -338,6 +357,12 @@ def generate_ai_draft(request_id: int):
     conn.commit()
     conn.close()
 
+    return draft
+
+
+@app.post("/request/{request_id}/generate")
+def generate_ai_draft(request_id: int):
+    _generate_ai_draft(request_id)
     return RedirectResponse(
         url="/requests_page",
         status_code=303
