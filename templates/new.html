@@ -69,6 +69,11 @@
     .draft-result h2 {
         margin-top: 0;
     }
+
+    .copy-status {
+        margin: 8px 0 0;
+        min-height: 1.5em;
+    }
     </style>
 </head>
 <body>
@@ -112,6 +117,8 @@
         <h2>Your draft</h2>
         <label for="generated_draft">Review before using</label>
         <textarea id="generated_draft" rows="10" readonly>{{ draft }}</textarea>
+        <button id="copy_draft" type="button">Copy Draft</button>
+        <p id="copy_status" class="copy-status" role="status" aria-live="polite"></p>
         <p><small>This draft has not been sent. Review and edit it before sharing.</small></p>
     </section>
     {% endif %}
@@ -130,9 +137,38 @@ const voiceButton = document.querySelector("#voice_button");
 const voiceStatus = document.querySelector("#voice_status");
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const draftResult = document.querySelector("#draft_result");
+const generatedDraft = document.querySelector("#generated_draft");
+const copyDraftButton = document.querySelector("#copy_draft");
+const copyStatus = document.querySelector("#copy_status");
 
 if (draftResult) {
     draftResult.focus();
+}
+
+if (copyDraftButton && generatedDraft) {
+    copyDraftButton.addEventListener("click", async () => {
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(generatedDraft.value);
+            } else {
+                generatedDraft.select();
+                generatedDraft.setSelectionRange(0, generatedDraft.value.length);
+                const copied = document.execCommand("copy");
+                generatedDraft.setSelectionRange(0, 0);
+                if (!copied) {
+                    throw new Error("Copy command failed");
+                }
+            }
+
+            copyStatus.textContent = "Draft copied to clipboard.";
+            copyDraftButton.textContent = "Copied!";
+            window.setTimeout(() => {
+                copyDraftButton.textContent = "Copy Draft";
+            }, 2000);
+        } catch (copyError) {
+            copyStatus.textContent = "Could not copy automatically. Select the draft and copy it manually.";
+        }
+    });
 }
 
 if (SpeechRecognition) {
