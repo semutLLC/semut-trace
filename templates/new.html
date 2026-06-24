@@ -57,6 +57,18 @@
         margin: 8px 0 0;
         min-height: 1.5em;
     }
+
+    .draft-result {
+        margin-top: 24px;
+        padding: 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background: #f7f7f7;
+    }
+
+    .draft-result h2 {
+        margin-top: 0;
+    }
     </style>
 </head>
 <body>
@@ -91,6 +103,19 @@
         <button type="submit">Generate Draft</button>
     </form>
 
+    {% if generation_error|default('') %}
+    <p class="error" role="alert">{{ generation_error }}</p>
+    {% endif %}
+
+    {% if draft|default('') %}
+    <section id="draft_result" class="draft-result" tabindex="-1" aria-live="polite">
+        <h2>Your draft</h2>
+        <label for="generated_draft">Review before using</label>
+        <textarea id="generated_draft" rows="10" readonly>{{ draft }}</textarea>
+        <p><small>This draft has not been sent. Review and edit it before sharing.</small></p>
+    </section>
+    {% endif %}
+
     <p><small>AI-generated drafts are never sent automatically and require your review.</small></p>
 
     <br>
@@ -104,6 +129,11 @@ const error = document.querySelector("#request_error");
 const voiceButton = document.querySelector("#voice_button");
 const voiceStatus = document.querySelector("#voice_status");
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const draftResult = document.querySelector("#draft_result");
+
+if (draftResult) {
+    draftResult.focus();
+}
 
 if (SpeechRecognition) {
     const recognition = new SpeechRecognition();
