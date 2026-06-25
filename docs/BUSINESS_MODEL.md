@@ -1,7 +1,3 @@
-I actually like having one BUSINESS_MODEL.md that explains how Semut becomes a sustainable company, not just what the first product is.
-
-Here’s how I’d structure it.
-
 Semut LLC Business Model
 
 Version 0.1
@@ -295,5 +291,3 @@ Long-Term Vision
 Semut aims to become a practical coordination platform where AI, humans, and software systems work together.
 
 The company grows by helping people complete real work, while reducing barriers to technology, encouraging collaboration, and continuously improving through real-world use.
-
-I think this version has one advantage over a typical startup business plan: it doesn’t lock you into one product. It explains how Semut LLC can evolve from an AI assistant company into a broader coordination platform while still keeping today’s product—the local business assistant—as the first and most important business.
