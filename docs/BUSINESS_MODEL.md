@@ -1,4 +1,4 @@
-Semut LLC Business Model
+# Semut LLC Business Model
 
 Version 0.1
 
@@ -6,7 +6,7 @@ This document describes how Semut LLC creates value, generates revenue, and grow
 
 ⸻
 
-Mission
+## Mission
 
 Semut LLC builds practical software that helps people coordinate work more effectively.
 
@@ -16,7 +16,7 @@ Rather than replacing people or existing software, Semut composes tools into sim
 
 ⸻
 
-Principles
+## Principles
 
 Low Barrier to Entry
 
@@ -43,7 +43,7 @@ Business owners always review customer-facing communication before it is sent.
 
 ⸻
 
-Open Development
+## Open Development
 
 Semut is developed openly whenever practical.
 
@@ -59,7 +59,7 @@ We believe execution, customer relationships, and continuous improvement create 
 
 ⸻
 
-Primary Business
+## Primary Business
 
 AI Assistant for Local Businesses
 
@@ -83,7 +83,7 @@ Examples:
 * Appointment replies
 * Follow-ups
 
-Future workflow:
+## Future workflow:
 
 Customer request
 
@@ -113,7 +113,7 @@ Business memory
 
 ⸻
 
-Why Customers Pay
+## Why Customers Pay
 
 Customers are not paying for AI alone.
 
@@ -123,7 +123,7 @@ The goal is to reduce administrative work so owners can spend more time serving 
 
 ⸻
 
-Revenue Streams
+## Revenue Streams
 
 1. Monthly Subscription
 
@@ -200,7 +200,7 @@ Organizations may request assistance implementing AI-assisted workflows using Se
 
 ⸻
 
-Open Source Ecosystem
+## Open Source Ecosystem
 
 Semut welcomes contributors.
 
@@ -233,7 +233,7 @@ Long-term advantages include:
 
 ⸻
 
-Growth Roadmap
+## Growth Roadmap
 
 Phase 1
 
@@ -286,7 +286,7 @@ Possible areas:
 
 ⸻
 
-Long-Term Vision
+## Long-Term Vision
 
 Semut aims to become a practical coordination platform where AI, humans, and software systems work together.
 
