@@ -42,6 +42,33 @@ As knowledge becomes repeated and shared, norms emerge.
 
 As norms persist across time and participants, institutions emerge.
 
+## Product Philosophy
+
+Semut believes that successful products emerge from a continuous feedback loop between customers, contributors, and AI.
+
+Rather than being purely customer-driven or purely vision-driven, Semut follows a feedback-driven approach.
+
+Customers reveal real problems through their daily work and interactions. These become traces that are recorded and observed over time. Contributors and AI analyze these traces, identify recurring patterns, and propose new solutions. Customers then validate those solutions through real usage, creating the next generation of feedback.
+
+```text
+Customer Actions
+        ↓
+      Trace
+        ↓
+Memory & Knowledge
+        ↓
+Proposed Solution
+        ↓
+Customer Validation
+        ↓
+Repeat
+```
+
+
+In this model, customers are not expected to design products, nor are products built solely from the founder’s vision. Instead, Semut combines observation, experimentation, and rapid iteration to continuously improve its products.
+
+We believe that the best software is created by understanding real work, proposing thoughtful solutions, and learning quickly from reality.
+
 ## Long-Term Vision
 
 The long-term vision of Semut Trace is to create a durable record of real-world coordination.
