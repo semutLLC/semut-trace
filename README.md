@@ -1,5 +1,9 @@
 # Semut Trace
 
+## Semut is
+Semut is an intelligence and coordination layer built on top of existing software ecosystems such as GitHub, business applications, and AI services.
+
+## Trace
 A trace-first platform for local businesses.
 
 Semut Trace records business activity as a stream of traceable events. Rather than starting with separate CRM, ERP, scheduling, or workflow systems, Semut begins with a simple principle:
