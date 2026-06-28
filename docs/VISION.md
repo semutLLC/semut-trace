@@ -71,6 +71,8 @@ We believe that the best software is created by understanding real work, proposi
 
 ## Long-Term Vision
 
+Semut envisions a future where human activity, software, and AI continuously learn from one another. Over time, Semut becomes a living record of collaboration, connecting people, organizations, and systems through evolving workflows and shared history.
+
 The long-term vision of Semut Trace is to create a durable record of real-world coordination.
 
 Rather than beginning with assumptions, categories, or predefined structures, Semut Trace begins with observable events and allows higher-order patterns to emerge from recorded activity.
